@@ -7,7 +7,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import githubtest.dto.commit.CommitResponse
 import githubtest.dto.repository.Repository
 
-const val token = "github personal access token"
+const val token = Constant.TOKEN
 
 fun main() {
     val owner = "yoon6763"
