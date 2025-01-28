@@ -1,6 +1,6 @@
-package githubtest.dto
+package githubtest.dto.commit
 
-data class Author(
+data class CommitterX(
     val avatar_url: String,
     val events_url: String,
     val followers_url: String,

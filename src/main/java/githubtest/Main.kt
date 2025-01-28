@@ -4,12 +4,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import githubtest.dto.CommitResponse
+import githubtest.dto.commit.CommitResponse
+
+const val token = "github_personal_access_token"
 
 fun main() {
     val owner = "yoon6763"
     val repo = "objects-practice"
-    val token = "github personal access token"
 
     fetchGitHubCommits(owner, repo, token)
 }

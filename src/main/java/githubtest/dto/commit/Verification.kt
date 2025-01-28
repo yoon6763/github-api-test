@@ -1,4 +1,4 @@
-package githubtest.dto
+package githubtest.dto.commit
 
 data class Verification(
     val payload: Any?,

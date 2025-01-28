@@ -1,4 +1,4 @@
-package githubtest.dto
+package githubtest.dto.commit
 
 data class Parent(
     val html_url: String,
