@@ -2,7 +2,7 @@ package githubtest.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import githubtest.dto.commit.CommitResponse
+import githubtest.dto.commit.CommitItem
 import githubtest.dto.repository.Repository
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -19,28 +19,14 @@ class GitHubApiClient(private val token: String) {
     private val objectMapper = jacksonObjectMapper()
 
     // 모든 리포지토리 가져오기
-    fun getRepositories(owner: String): List<Repository> {
-        val repositories = mutableListOf<Repository>()
-        var page = 1
-        val perPage = 100
+    fun getRepositories(owner: String, page: Int = 1, perPage: Int = 100): List<Repository> {
+        val endpoint = "/users/$owner/repos?page=$page&per_page=$perPage"
+        val request = createRequest(endpoint)
 
-        while (true) {
-            val endpoint = "/users/$owner/repos?per_page=$perPage&page=$page"
-            val request = createRequest(endpoint)
+        val response = client.newCall(request).execute()
+        val body = response.body?.string()
 
-            val response = client.newCall(request).execute()
-            val body = response.body?.string()
-
-            if (!response.isSuccessful || body.isNullOrEmpty()) break
-
-            val pageRepositories: List<Repository> = objectMapper.readValue(body)
-            if (pageRepositories.isEmpty()) break
-
-            repositories.addAll(pageRepositories)
-            page++
-        }
-
-        return repositories
+        return objectMapper.readValue(body!!)
     }
 
     // 특정 리포지토리의 커밋 가져오기
@@ -48,7 +34,7 @@ class GitHubApiClient(private val token: String) {
         owner: String,
         repo: String,
         sinceDate: LocalDateTime = LocalDateTime.now().minusDays(7),
-    ): CommitResponse {
+    ): List<CommitItem> {
         val parsedSinceDate = sinceDate.format(DateTimeFormatter.ISO_DATE_TIME)
         val endpoint = "/repos/$owner/$repo/commits?since=$parsedSinceDate"
         val request = createRequest(endpoint)
